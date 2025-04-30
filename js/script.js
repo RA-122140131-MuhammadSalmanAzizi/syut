@@ -9,12 +9,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // Simpan teks asli tombol "Nggak"
     const noBtnOriginalText = noBtn.innerText;
   
-    // Fungsi mengganti teks tombol "Nggak" menjadi "Eits.."
+    // Fungsi mengganti teks tombol "Nggak"
     function changeNoButtonTextToEits() {
       noBtn.innerText = "Eits..";
       setTimeout(() => {
         noBtn.innerText = noBtnOriginalText;
-      }, 800); // Kembali ke teks asli setelah 0.8 detik
+      }, 800);
     }
   
     // Fungsi memindahkan posisi tombol "Nggak"
@@ -43,14 +43,14 @@ document.addEventListener("DOMContentLoaded", () => {
   
     // Event listener untuk tombol "Nggak"
     noBtn.addEventListener("mouseenter", () => {
-      changeNoButtonTextToEits(); // Selalu ubah teks ke Eits..
-      moveNoButton(); // Pindahkan tombol
+      changeNoButtonTextToEits();
+      moveNoButton();
     });
   
     noBtn.addEventListener("touchstart", (e) => {
-      e.preventDefault(); // Hindari delay touch
-      changeNoButtonTextToEits(); // Ubah teks meskipun tanpa hover
-      moveNoButton(); // Pindahkan tombol saat disentuh
+      e.preventDefault();
+      changeNoButtonTextToEits();
+      moveNoButton();
     });
   
     noBtn.addEventListener("click", moveNoButton);
@@ -76,13 +76,16 @@ document.addEventListener("DOMContentLoaded", () => {
       bigLove.className = "big-love";
       celebration.querySelector("#big-love").appendChild(bigLove);
   
-      // Mulai musik
+      // Mainkan musik hanya jika di dalam event click langsung
       const music = document.getElementById("background-music");
       if (music) {
-        music.volume = 1; // Volume normal
-        music.play().catch((err) => console.log("Autoplay ditolak:", err));
+        const playPromise = music.play();
+        if (playPromise !== undefined) {
+          playPromise.catch((err) => {
+            console.log("Autoplay ditolak oleh browser:", err);
+          });
+        }
   
-        // Tampilkan tombol mute
         const muteBtn = document.getElementById("muteBtn");
         if (muteBtn) {
           muteBtn.classList.remove("hidden");
@@ -96,7 +99,6 @@ document.addEventListener("DOMContentLoaded", () => {
         duration: 1,
         ease: "elastic.out(1, 0.3)",
         onComplete: () => {
-          // Pecahkan jadi love kecil
           for (let i = 0; i < 20; i++) {
             const smallLove = document.createElement("div");
             smallLove.className = "small-love";
@@ -117,14 +119,10 @@ document.addEventListener("DOMContentLoaded", () => {
             });
           }
   
-          // Hapus love besar setelah animasi
           setTimeout(() => {
             bigLove.remove();
-  
-            // Tampilkan teks pengumuman dan biarkan tetap ada
             announcementText.classList.add("show");
   
-            // Setelah 1 detik, tampilkan detail akhir
             setTimeout(() => {
               gsap.to(finalDetails, {
                 opacity: 1,
@@ -139,11 +137,11 @@ document.addEventListener("DOMContentLoaded", () => {
   
     // Event listener untuk tombol mute/unmute
     const muteBtn = document.getElementById("muteBtn");
-    if (muteBtn) {
-      muteBtn.addEventListener("click", () => {
-        const icon = muteBtn.querySelector("i");
-        const music = document.getElementById("background-music");
+    const icon = muteBtn ? muteBtn.querySelector("i") : null;
+    const music = document.getElementById("background-music");
   
+    if (muteBtn && icon && music) {
+      muteBtn.addEventListener("click", () => {
         if (music.volume > 0) {
           music.volume = 0;
           muteBtn.classList.add("muted");
