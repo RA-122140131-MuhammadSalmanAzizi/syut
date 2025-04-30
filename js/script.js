@@ -1,240 +1,173 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Deteksi iOS
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    const audioPrompt = document.getElementById('ios-audio-prompt');
-    const music = document.getElementById('background-music');
-    let audioEnabled = false;
-  
-    // Elemen UI
-    const yesBtn = document.getElementById("yesBtn");
-    const noBtn = document.getElementById("noBtn");
-    const mainContainer = document.querySelector(".main-container");
-    const celebration = document.getElementById("celebration");
-    const announcementText = document.getElementById("announcement-text");
-    const finalDetails = document.getElementById("final-details");
-    const muteBtn = document.getElementById("muteBtn");
-    const noBtnOriginalText = noBtn.innerText;
-  
-    // 1. Inisialisasi Audio untuk iOS
-    if (isIOS) {
-      // Memuat audio terlebih dahulu
-      music.load();
-      music.volume = 0;
-      
-      // Tampilkan prompt audio
-      audioPrompt.classList.remove('hidden');
-      
-      // Aktifkan audio saat layar disentuh
-      const enableAudio = () => {
-        if (!audioEnabled) {
-          music.volume = 1;
-          music.play().then(() => {
-            audioEnabled = true;
-            audioPrompt.classList.add('hidden');
-            muteBtn.classList.remove('hidden');
-          }).catch(e => {
-            console.log("Audio activation failed:", e);
-            audioPrompt.querySelector('p').textContent = 'Tap to unmute - then tap here';
-          });
-        }
-      };
-      
-      document.addEventListener('touchstart', enableAudio, { once: true });
-    } else {
-      // Untuk non-iOS, langsung aktifkan audio
-      music.volume = 1;
-      audioEnabled = true;
-    }
-  
-    // 2. Fungsi untuk tombol "Nggak"
-    function changeNoButtonTextToEits() {
-      noBtn.innerText = "Eits..";
-      setTimeout(() => {
-        noBtn.innerText = noBtnOriginalText;
-      }, 800);
-    }
-  
-    function moveNoButton() {
-      const yesBtnRect = yesBtn.getBoundingClientRect();
-      let newX, newY;
-      do {
-        newX = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-        newY = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-      } while (!isSafePosition(newX, newY, yesBtnRect));
-      
-      gsap.to(noBtn, {
-        x: newX - noBtn.offsetLeft,
-        y: newY - noBtn.offsetTop,
-        duration: 0.1,
-        ease: "power2.out",
-      });
-    }
-  
-    function isSafePosition(x, y, yesBtnRect) {
-      const minDistance = 150;
-      const dx = x - (yesBtnRect.left + yesBtnRect.width / 2);
-      const dy = y - (yesBtnRect.top + yesBtnRect.height / 2);
-      return Math.sqrt(dx * dx + dy * dy) > minDistance;
-    }
-  
-    // Event listeners untuk tombol "Nggak"
-    noBtn.addEventListener("mouseenter", () => {
-      changeNoButtonTextToEits();
-      moveNoButton();
-    });
-  
-    noBtn.addEventListener("touchstart", (e) => {
-      e.preventDefault();
-      changeNoButtonTextToEits();
-      moveNoButton();
-    });
-  
-    noBtn.addEventListener("click", () => {
-      changeNoButtonTextToEits();
-      moveNoButton();
-    });
-  
-    // 3. Fungsi untuk tombol "Mau"
-    yesBtn.addEventListener("click", () => {
-      // Animasi hilangkan kontainer utama
-      gsap.to(mainContainer, {
-        opacity: 0,
-        scale: 0.95,
-        duration: 0.6,
-        ease: "power3.in",
-        onComplete: () => {
-          mainContainer.style.display = "none";
-        },
-      });
-  
-      // Tampilkan perayaan
-      celebration.classList.add("active");
-  
-      // Buat animasi love
-      const bigLove = document.createElement("div");
-      bigLove.className = "big-love";
-      celebration.querySelector("#big-love").appendChild(bigLove);
-  
-      // 4. Handle audio untuk semua platform
-      const handleAudio = () => {
-        if (audioEnabled) {
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const music = document.getElementById('background-music');
+  const iosOverlay = document.getElementById('ios-audio-overlay');
+  let audioInitialized = false;
+
+  // iOS Audio Initialization
+  if (isIOS) {
+    const initAudio = () => {
+      music.volume = 0.01;
+      music.play()
+        .then(() => {
+          music.pause();
           music.currentTime = 0;
-          music.play().catch(e => console.log("Play error:", e));
-        } else if (isIOS) {
-          audioPrompt.classList.remove('hidden');
-          audioPrompt.querySelector('p').textContent = 'Tap anywhere to enable sound';
-        }
-        
-        // Tampilkan tombol mute
-        muteBtn.classList.remove("hidden");
-      };
-  
-      // Untuk iOS, tunggu interaksi pengguna
-      if (isIOS && !audioEnabled) {
-        const enableOnTap = () => {
-          document.removeEventListener('touchstart', enableOnTap);
           music.volume = 1;
-          music.play().then(() => {
-            audioEnabled = true;
-            audioPrompt.classList.add('hidden');
-          }).catch(e => {
-            console.log("Audio play failed:", e);
-          });
-        };
-        document.addEventListener('touchstart', enableOnTap);
-      } else {
-        // Untuk non-iOS atau iOS yang sudah diaktifkan
-        handleAudio();
-      }
-  
-      // Animasi love
-      gsap.to(bigLove, {
-        scale: 1,
-        opacity: 1,
-        duration: 1,
-        ease: "elastic.out(1, 0.3)",
-        onComplete: () => {
-          // Buat pecahan love kecil
-          for (let i = 0; i < 20; i++) {
-            const smallLove = document.createElement("div");
-            smallLove.className = "small-love";
-            smallLove.style.left = `${50 + Math.random() * 10}%`;
-            smallLove.style.top = `${50 + Math.random() * 10}%`;
-            celebration.querySelector("#love-container").appendChild(smallLove);
-            
-            const angle = Math.random() * 2 * Math.PI;
-            const distance = 100 + Math.random() * 150;
-            const speed = 1 + Math.random() * 1;
-            
-            gsap.to(smallLove, {
-              x: Math.cos(angle) * distance,
-              y: Math.sin(angle) * distance,
-              scale: 1.2,
-              opacity: 0.8,
-              duration: speed,
-              ease: "power2.out",
-              onComplete: () => smallLove.remove(),
-            });
-          }
-  
-          setTimeout(() => {
-            bigLove.remove();
-            announcementText.classList.add("show");
-  
-            setTimeout(() => {
-              gsap.to(finalDetails, {
-                opacity: 1,
-                duration: 0.6,
-                delay: 0.2,
-              });
-            }, 1000);
-          }, 1000);
-        },
-      });
-    });
-  
-    // 5. Fungsi mute/unmute yang kompatibel dengan iOS
-    muteBtn.addEventListener("click", function() {
-      if (!audioEnabled && isIOS) {
-        // Kasus khusus untuk iOS yang belum mengaktifkan audio
-        music.volume = 1;
-        music.play().then(() => {
-          audioEnabled = true;
-          this.classList.remove("muted");
-          const icon = this.querySelector("i");
-          icon.classList.remove("fa-volume-mute");
-          icon.classList.add("fa-volume-up");
-          audioPrompt.classList.add('hidden');
-        }).catch(e => {
-          console.log("Unmute failed:", e);
-          audioPrompt.classList.remove('hidden');
-          audioPrompt.querySelector('p').textContent = 'Tap screen to enable sound';
+          audioInitialized = true;
+          iosOverlay.classList.add('hidden');
+        })
+        .catch(() => {
+          iosOverlay.classList.remove('hidden');
         });
+    };
+
+    document.body.addEventListener('touchstart', function firstTouch() {
+      document.body.removeEventListener('touchstart', firstTouch);
+      initAudio();
+    }, { once: true });
+
+    iosOverlay.addEventListener('touchstart', initAudio);
+    iosOverlay.classList.remove('hidden');
+  }
+
+  // Button Logic
+  const yesBtn = document.getElementById("yesBtn");
+  const noBtn = document.getElementById("noBtn");
+  const muteBtn = document.getElementById("muteBtn");
+  const noBtnOriginalText = noBtn.innerText;
+
+  // No Button Behavior
+  noBtn.addEventListener('mouseenter', handleNoButton);
+  noBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    handleNoButton();
+  });
+  noBtn.addEventListener('click', handleNoButton);
+
+  function handleNoButton() {
+    noBtn.innerText = "Eits..";
+    setTimeout(() => {
+      noBtn.innerText = noBtnOriginalText;
+    }, 800);
+    moveButton();
+  }
+
+  function moveButton() {
+    const yesBtnRect = yesBtn.getBoundingClientRect();
+    let newX, newY;
+    do {
+      newX = Math.random() * (window.innerWidth - 150);
+      newY = Math.random() * (window.innerHeight - 60);
+    } while (Math.abs(newX - yesBtnRect.x) < 150);
+    
+    gsap.to(noBtn, {
+      x: newX - noBtn.offsetLeft,
+      y: newY - noBtn.offsetTop,
+      duration: 0.3,
+      ease: "power2.out"
+    });
+  }
+
+  // Yes Button Logic
+  yesBtn.addEventListener('click', () => {
+    gsap.to(".main-container", {
+      opacity: 0,
+      scale: 0.9,
+      duration: 0.5,
+      onComplete: () => {
+        document.querySelector(".main-container").style.display = "none";
+      }
+    });
+
+    document.getElementById("celebration").classList.add("active");
+    startCelebration();
+  });
+
+  function startCelebration() {
+    // Music Handling
+    const handleMusic = () => {
+      if (isIOS && !audioInitialized) {
+        iosOverlay.classList.remove('hidden');
         return;
       }
-  
-      // Normal mute/unmute functionality
-      const icon = this.querySelector("i");
-      if (music.volume > 0) {
-        music.volume = 0;
-        this.classList.add("muted");
-        icon.classList.remove("fa-volume-up");
-        icon.classList.add("fa-volume-mute");
-      } else {
-        music.volume = 1;
-        this.classList.remove("muted");
-        icon.classList.remove("fa-volume-mute");
-        icon.classList.add("fa-volume-up");
-        // Untuk iOS, pastikan audio diputar kembali
-        if (isIOS) {
-          music.play().catch(e => console.log("Play on unmute failed:", e));
-        }
-      }
+      
+      music.volume = 0.7;
+      music.play().catch(() => {
+        if (isIOS) iosOverlay.classList.remove('hidden');
+      });
+      muteBtn.classList.remove('hidden');
+    };
+
+    isIOS ? handleMusic() : setTimeout(handleMusic, 300);
+
+    // Celebration Animations
+    const bigLove = document.createElement('div');
+    bigLove.className = 'big-love';
+    document.getElementById('big-love').appendChild(bigLove);
+
+    gsap.to(bigLove, {
+      scale: 1,
+      opacity: 1,
+      duration: 1,
+      ease: "elastic.out(1, 0.3)",
+      onComplete: createHearts
     });
-  
-    // Tambahkan touch support untuk mute button
-    muteBtn.addEventListener("touchstart", function(e) {
-      e.preventDefault();
-      this.click();
-    });
+  }
+
+  // Mute Button Logic
+  muteBtn.addEventListener('click', () => {
+    if (isIOS) {
+      music.volume = music.volume > 0 ? 0 : 1;
+      muteBtn.innerHTML = music.volume > 0 ? 
+        '<i class="fas fa-volume-up"></i>' : 
+        '<i class="fas fa-volume-mute"></i>';
+      if (music.volume > 0) music.play();
+    } else {
+      music.muted = !music.muted;
+      muteBtn.innerHTML = music.muted ? 
+        '<i class="fas fa-volume-mute"></i>' : 
+        '<i class="fas fa-volume-up"></i>';
+    }
   });
+
+  // Handle Tab Visibility Changes
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && music.paused && isIOS) {
+      music.play().catch(() => {
+        iosOverlay.classList.remove('hidden');
+      });
+    }
+  });
+
+  // Heart Animation Functions
+  function createHearts() {
+    for (let i = 0; i < 20; i++) {
+      const heart = document.createElement('div');
+      heart.className = 'small-love';
+      heart.style.left = `${50 + Math.random() * 10}%`;
+      heart.style.top = `${50 + Math.random() * 10}%`;
+      document.getElementById('love-container').appendChild(heart);
+      
+      gsap.to(heart, {
+        x: Math.cos(Math.random() * Math.PI * 2) * 200,
+        y: Math.sin(Math.random() * Math.PI * 2) * 200,
+        opacity: 0.8,
+        scale: 1.2,
+        duration: 1 + Math.random(),
+        onComplete: () => heart.remove()
+      });
+    }
+
+    gsap.to("#announcement-text", {
+      opacity: 1,
+      delay: 0.5,
+      duration: 1
+    });
+
+    gsap.to("#final-details", {
+      opacity: 1,
+      delay: 1.5,
+      duration: 1
+    });
+  }
+});
