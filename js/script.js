@@ -1,15 +1,35 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // Check if iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    
+    // iOS audio message element
+    const iosAudioMessage = document.getElementById('ios-audio-message');
+    
+    // Enable audio on iOS with a tap
+    if (isIOS) {
+      document.addEventListener('touchstart', function enableAudio() {
+        document.removeEventListener('touchstart', enableAudio);
+        const music = document.getElementById('background-music');
+        music.load();
+        music.play().then(() => {
+          music.pause();
+          music.currentTime = 0;
+        }).catch(e => console.log('Audio init error:', e));
+        iosAudioMessage.classList.add('hidden');
+      }, { once: true });
+      
+      iosAudioMessage.classList.remove('hidden');
+    }
+  
     const yesBtn = document.getElementById("yesBtn");
     const noBtn = document.getElementById("noBtn");
     const mainContainer = document.querySelector(".main-container");
     const celebration = document.getElementById("celebration");
     const announcementText = document.getElementById("announcement-text");
     const finalDetails = document.getElementById("final-details");
-  
-    // Simpan teks asli tombol "Nggak"
     const noBtnOriginalText = noBtn.innerText;
   
-    // Fungsi mengganti teks tombol "Nggak"
+    // Fungsi mengganti teks tombol "Nggak" menjadi "Eits.."
     function changeNoButtonTextToEits() {
       noBtn.innerText = "Eits..";
       setTimeout(() => {
@@ -17,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 800);
     }
   
-    // Fungsi memindahkan posisi tombol "Nggak"
     function moveNoButton() {
       const yesBtnRect = yesBtn.getBoundingClientRect();
       let newX, newY;
@@ -33,7 +52,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
   
-    // Cek apakah lokasi aman dari tombol "Mau"
     function isSafePosition(x, y, yesBtnRect) {
       const minDistance = 150;
       const dx = x - (yesBtnRect.left + yesBtnRect.width / 2);
@@ -41,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return Math.sqrt(dx * dx + dy * dy) > minDistance;
     }
   
-    // Event listener untuk tombol "Nggak"
+    // Event listeners for "Nggak" button
     noBtn.addEventListener("mouseenter", () => {
       changeNoButtonTextToEits();
       moveNoButton();
@@ -53,11 +71,12 @@ document.addEventListener("DOMContentLoaded", () => {
       moveNoButton();
     });
   
-    noBtn.addEventListener("click", moveNoButton);
+    noBtn.addEventListener("click", () => {
+      changeNoButtonTextToEits();
+      moveNoButton();
+    });
   
-    // Event klik tombol "Mau"
     yesBtn.addEventListener("click", () => {
-      // Fade out kontainer awal
       gsap.to(mainContainer, {
         opacity: 0,
         scale: 0.95,
@@ -68,22 +87,29 @@ document.addEventListener("DOMContentLoaded", () => {
         },
       });
   
-      // Aktifkan layar perayaan
       celebration.classList.add("active");
   
-      // Buat love besar
       const bigLove = document.createElement("div");
       bigLove.className = "big-love";
       celebration.querySelector("#big-love").appendChild(bigLove);
   
-      // Mainkan musik hanya jika di dalam event click langsung
       const music = document.getElementById("background-music");
       if (music) {
-        const playPromise = music.play();
-        if (playPromise !== undefined) {
-          playPromise.catch((err) => {
-            console.log("Autoplay ditolak oleh browser:", err);
+        const playAudio = () => {
+          music.volume = 0.7;
+          music.play().catch(err => {
+            console.log("Audio play failed:", err);
+            if (isIOS) {
+              iosAudioMessage.classList.remove('hidden');
+              iosAudioMessage.textContent = 'Tap to enable sound';
+            }
           });
+        };
+        
+        if (isIOS) {
+          playAudio();
+        } else {
+          setTimeout(playAudio, 300);
         }
   
         const muteBtn = document.getElementById("muteBtn");
@@ -92,7 +118,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
   
-      // Animasi love besar muncul dan meledak
       gsap.to(bigLove, {
         scale: 1,
         opacity: 1,
@@ -135,23 +160,41 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   
-    // Event listener untuk tombol mute/unmute
     const muteBtn = document.getElementById("muteBtn");
-    const icon = muteBtn ? muteBtn.querySelector("i") : null;
-    const music = document.getElementById("background-music");
-  
-    if (muteBtn && icon && music) {
-      muteBtn.addEventListener("click", () => {
+    if (muteBtn) {
+      muteBtn.addEventListener("click", function() {
+        const icon = this.querySelector("i");
+        const music = document.getElementById("background-music");
+        
         if (music.volume > 0) {
           music.volume = 0;
-          muteBtn.classList.add("muted");
+          this.classList.add("muted");
           icon.classList.remove("fa-volume-up");
           icon.classList.add("fa-volume-mute");
         } else {
           music.volume = 1;
-          muteBtn.classList.remove("muted");
+          this.classList.remove("muted");
           icon.classList.remove("fa-volume-mute");
           icon.classList.add("fa-volume-up");
+          if (isIOS) {
+            music.play().catch(e => console.log('Unmute play failed:', e));
+          }
+        }
+      });
+      
+      muteBtn.addEventListener("touchstart", function(e) {
+        e.preventDefault();
+        this.click();
+      });
+    }
+    
+    if (isIOS) {
+      document.addEventListener('touchstart', function handleAudioEnable() {
+        const music = document.getElementById('background-music');
+        if (music.paused && music.volume === 0) {
+          music.volume = 1;
+          music.play().catch(e => console.log('Audio play on tap failed:', e));
+          iosAudioMessage.classList.add('hidden');
         }
       });
     }
