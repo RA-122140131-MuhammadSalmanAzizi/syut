@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>its your special day</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <div class="main-container">
+    <h1>Mau gak jadi pacar aku? 🥺</h1>
+    <div class="buttons">
+      <button id="yesBtn">Mau</button>
+      <button id="noBtn">Nggak</button>
+    </div>
+  </div>
+
+  <div id="celebration">
+    <div class="celebration-content">
+
+      <!-- Container Love -->
+      <div id="big-love"></div>
+      <div id="love-container"></div>
+
+      <!-- Teks Utama -->
+      <h2 id="announcement-text">Yeyy! cie udah gak jomblo lagi.. 💖</h2>
+
+      <!-- Detail Akhir -->
+      <div id="final-details" class="hidden">
+        <p>Tanggal: <span class="date">5 Mei 2025</span></p>
+        <p><strong>Salman & Nabila ❤️</strong></p>
+        <p>"Semoga hubungan kita abadi selamanya ❤️"</p>
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- Tombol Mute/Unmute - Bulat Sempurna -->
+  <button id="muteBtn" class="sound-button hidden">🔊</button>
+
+  <!-- Audio Background -->
+  <audio id="backgroundMusic" src="audio/romantic-music.mp3" loop></audio>
+
+  <!-- GSAP Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <!-- Script Utama -->
+  <script src="js/script.js"></script>
+</body>
+</html>
