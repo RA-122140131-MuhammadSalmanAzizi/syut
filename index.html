@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Its Your Special Day</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>its your special day</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <div class="main-container">
@@ -19,33 +19,37 @@
 
   <div id="celebration">
     <div class="celebration-content">
+
+      <!-- Container untuk love besar -->
       <div id="big-love"></div>
+
+      <!-- Container untuk pecahan love kecil -->
       <div id="love-container"></div>
+
+      <!-- Teks utama -->
       <h2 id="announcement-text">Yeyy! cie udah gak jomblo lagi..</h2>
+
+      <!-- Info akhir -->
       <div id="final-details" class="hidden">
         <p>Tanggal: <span class="date">5 Mei 2025</span></p>
-        <h3>Salman & Nabila ❤️</h3>
+        <p><h3>Salman & Nabila ❤️</h3></p>
         <p>"Semoga hubungan kita lanjut ke jenjang yang lebih serius aamiin.. ❤️"</p>
       </div>
     </div>
   </div>
 
-  <audio id="background-music" loop>
-    <source src="audio/romantic-music.mp3" type="audio/mpeg">
-  </audio>
 
+  <!-- Di bawah div #celebration -->
+  <audio id="background-music" src="audio/romantic-music.mp3" loop></audio>
+
+  <!-- Tombol Mute/Unmute -->
   <button id="muteBtn" class="mute-button hidden">
     <i class="fas fa-volume-up"></i>
   </button>
 
-  <div id="ios-audio-overlay" class="hidden">
-    <div class="ios-alert">
-      <p>Tap layar untuk mengaktifkan suara</p>
-      <small>(Harus diaktifkan manual di iOS)</small>
-    </div>
-  </div>
-
+  <!-- GSAP Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <!-- Script Utama -->
   <script src="js/script.js"></script>
 </body>
 </html>
