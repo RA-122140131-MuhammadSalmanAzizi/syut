@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Its your special day</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Its Your Special Day</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
   <div class="main-container">
@@ -25,7 +24,7 @@
       <h2 id="announcement-text">Yeyy! cie udah gak jomblo lagi..</h2>
       <div id="final-details" class="hidden">
         <p>Tanggal: <span class="date">5 Mei 2025</span></p>
-        <p><h3>Salman & Nabila ❤️</h3></p>
+        <h3>Salman & Nabila ❤️</h3>
         <p>"Semoga hubungan kita lanjut ke jenjang yang lebih serius aamiin.. ❤️"</p>
       </div>
     </div>
@@ -33,20 +32,18 @@
 
   <audio id="background-music" loop>
     <source src="audio/romantic-music.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
   </audio>
 
   <button id="muteBtn" class="mute-button hidden">
     <i class="fas fa-volume-up"></i>
   </button>
 
-
-
-  <!-- Tambahkan div untuk iOS audio prompt -->
-  <div id="ios-audio-prompt" class="ios-prompt hidden">
-    <p>Tap anywhere to enable sound</p>
+  <div id="ios-audio-overlay" class="hidden">
+    <div class="ios-alert">
+      <p>Tap layar untuk mengaktifkan suara</p>
+      <small>(Harus diaktifkan manual di iOS)</small>
+    </div>
   </div>
-
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="js/script.js"></script>
