@@ -3,15 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>its your special day</title>
-
-  <!-- Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
-
-  <!-- Font Awesome (untuk ikon volume) -->
+  <title>Its your special day</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-  <!-- CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
@@ -27,7 +22,7 @@
     <div class="celebration-content">
       <div id="big-love"></div>
       <div id="love-container"></div>
-      <h2 id="announcement-text">Yeyy! Cie udah gak jomblo lagi..</h2>
+      <h2 id="announcement-text">Yeyy! cie udah gak jomblo lagi..</h2>
       <div id="final-details" class="hidden">
         <p>Tanggal: <span class="date">5 Mei 2025</span></p>
         <p><h3>Salman & Nabila ❤️</h3></p>
@@ -36,16 +31,20 @@
     </div>
   </div>
 
-  <!-- Musik & Tombol Mute -->
-  <audio id="background-music" src="audio/romantic-music.mp3" loop></audio>
+  <audio id="background-music" loop>
+    <source src="audio/romantic-music.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
   <button id="muteBtn" class="mute-button hidden">
     <i class="fas fa-volume-up"></i>
   </button>
 
-  <!-- GSAP Library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <div id="ios-audio-message" class="hidden">
+    Tap anywhere to enable sound
+  </div>
 
-  <!-- JavaScript Utama -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="js/script.js"></script>
 </body>
 </html>
