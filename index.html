@@ -4,8 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>its your special day</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome (untuk ikon volume) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- CSS -->
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
@@ -19,17 +25,9 @@
 
   <div id="celebration">
     <div class="celebration-content">
-
-      <!-- Container untuk love besar -->
       <div id="big-love"></div>
-
-      <!-- Container untuk pecahan love kecil -->
       <div id="love-container"></div>
-
-      <!-- Teks utama -->
-      <h2 id="announcement-text">Yeyy! cie udah gak jomblo lagi..</h2>
-
-      <!-- Info akhir -->
+      <h2 id="announcement-text">Yeyy! Cie udah gak jomblo lagi..</h2>
       <div id="final-details" class="hidden">
         <p>Tanggal: <span class="date">5 Mei 2025</span></p>
         <p><h3>Salman & Nabila ❤️</h3></p>
@@ -38,18 +36,16 @@
     </div>
   </div>
 
-
-  <!-- Di bawah div #celebration -->
+  <!-- Musik & Tombol Mute -->
   <audio id="background-music" src="audio/romantic-music.mp3" loop></audio>
-
-  <!-- Tombol Mute/Unmute -->
   <button id="muteBtn" class="mute-button hidden">
     <i class="fas fa-volume-up"></i>
   </button>
 
   <!-- GSAP Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <!-- Script Utama -->
+
+  <!-- JavaScript Utama -->
   <script src="js/script.js"></script>
 </body>
 </html>
